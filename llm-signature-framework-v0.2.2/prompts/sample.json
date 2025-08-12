@@ -1,0 +1,11 @@
+[
+  {
+    "name": "email_classifier",
+    "template": "Classify this email into {labels}:\\n{text}\\nReturn one label.",
+    "params": {
+      "text": "str",
+      "labels": "str"
+    },
+    "returns": "str"
+  }
+]

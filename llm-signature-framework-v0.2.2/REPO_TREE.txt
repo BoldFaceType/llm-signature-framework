@@ -1,0 +1,27 @@
+llm-signature-framework
+├── .github
+│   └── workflows
+│       ├── ci.yml
+│       └── ruff-fix.yml
+├── canvas
+│   └── core_canvas_v0_2_2.py
+├── prompts
+│   └── sample.json
+├── scripts
+│   ├── init_repo.sh
+│   └── release_tag.sh
+├── src
+│   └── llm_signature_framework
+│       ├── examples
+│       │   └── demo.py
+│       ├── __init__.py
+│       └── core.py
+├── tests
+│   ├── test_manifest.py
+│   └── test_smoke.py
+├── .coveragerc
+├── .gitignore
+├── CHANGELOG.md
+├── LICENSE
+├── pyproject.toml
+└── README.md

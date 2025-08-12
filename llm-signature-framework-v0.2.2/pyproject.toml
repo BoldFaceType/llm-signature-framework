@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "llm-signature-framework"
+version = "0.2.2"
+description = "Signature-driven prompt-as-code framework with Pydantic validation, optional UI, and minimal deps."
+authors = [{name = "Your Name"}]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = ["pydantic>=2"]
+
+[project.optional-dependencies]
+dev = ["pytest","pytest-cov","ruff"]
+extras = ["tiktoken", "PyYAML", "openai", "anthropic"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+select = ["E", "F", "I"]
+ignore = []
