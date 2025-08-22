@@ -12,10 +12,14 @@ llm-signature-framework
 │   └── release_tag.sh
 ├── src
 │   └── llm_signature_framework
+│       ├── backends.py
+│       ├── cli.py
 │       ├── examples
 │       │   └── demo.py
 │       ├── __init__.py
-│       └── core.py
+│       ├── state.py
+│       ├── templates.py
+│       └── tools.py
 ├── tests
 │   ├── test_manifest.py
 │   └── test_smoke.py

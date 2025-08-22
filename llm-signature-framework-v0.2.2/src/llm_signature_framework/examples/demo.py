@@ -1,4 +1,4 @@
-from llm_signature_framework.core import LLMFunction, ToolRegistry
+from llm_signature_framework import LLMFunction, ToolRegistry
 
 llm = LLMFunction()
 
