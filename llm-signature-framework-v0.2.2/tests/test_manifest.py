@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from llm_signature_framework.core import LLMFunction, Tool, ToolRegistry, __version__
+from llm_signature_framework import LLMFunction, Tool, ToolRegistry, __version__
 
 def test_manifest_and_state(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)

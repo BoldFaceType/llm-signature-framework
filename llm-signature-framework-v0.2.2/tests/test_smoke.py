@@ -1,4 +1,4 @@
-from llm_signature_framework.core import LLMFunction
+from llm_signature_framework import LLMFunction
 
 def test_summarize():
     llm = LLMFunction()
