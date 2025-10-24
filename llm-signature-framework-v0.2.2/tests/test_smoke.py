@@ -1,5 +1,6 @@
 from llm_signature_framework import LLMFunction
 
+
 def test_summarize():
     llm = LLMFunction()
     @llm

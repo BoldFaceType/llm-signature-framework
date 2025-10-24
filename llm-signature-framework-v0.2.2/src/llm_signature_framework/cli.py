@@ -4,12 +4,13 @@ import argparse
 import json
 import os
 import sys
+import textwrap
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 
 from .backends import HybridBackend, set_backend
+from .templates import __version__, demo_loop_and_if
 from .tools import ToolRegistry
-from .templates import demo_loop_and_if, __version__
 
 
 class _Studio(BaseHTTPRequestHandler):
@@ -46,24 +47,32 @@ class _Studio(BaseHTTPRequestHandler):
             self.send_error(404)
 
     def _html(self):
-        body = """<!doctype html>
-<title>Prompt Studio (Read-only)</title>
-<style>body{font:14px system-ui;margin:1rem} pre{white-space:pre-wrap}</style>
-<h1>Prompt Studio</h1>
-<p><button onclick="load()">Refresh</button></p>
-<div id="summary"></div>
-<script>
-async function load(){
-  const st = await (await fetch('/state')).json().catch(()=>({}));
-  const runs = await (await fetch('/runs')).json().catch(()=>[]);
-  const total = st.executions?.length||0;
-  const tokens = st.executions?.reduce((a,e)=>a+(e.prompt_tokens||0)+(e.completion_tokens||0),0)||0;
-  document.getElementById('summary').innerHTML = `<p>Total execs: ${total}. Tokens: ${tokens}.</p>`+
-    `<p>Runs: ${runs.map(r=>`+"`"+"<a href='/runs/"+"${r}"+"' target='_blank'>"+"${r}"+"</a>"+"`").join(' | ')}.</p>`;
-}
-load();
-</script>
-"""
+        body = textwrap.dedent(
+            """
+            <!doctype html>
+            <title>Prompt Studio (Read-only)</title>
+            <style>body{font:14px system-ui;margin:1rem} pre{white-space:pre-wrap}</style>
+            <h1>Prompt Studio</h1>
+            <p><button onclick=\"load()\">Refresh</button></p>
+            <div id=\"summary\"></div>
+            <script>
+            async function load(){
+              const st = await (await fetch('/state')).json().catch(()=>({}));
+              const runs = await (await fetch('/runs')).json().catch(()=>[]);
+              const total = st.executions?.length||0;
+              const tokens = st.executions?.reduce(
+                (a,e)=>a+(e.prompt_tokens||0)+(e.completion_tokens||0),0
+              )||0;
+              document.getElementById('summary').innerHTML =
+                `<p>Total execs: ${total}. Tokens: ${tokens}.</p>` +
+                `<p>Runs: ${runs.map(
+                  (r)=>`+"`"+"<a href='/runs/"+"${r}"+"' target='_blank'>"+"${r}"+"</a>"+"`
+                ).join(' | ')}.</p>`;
+            }
+            load();
+            </script>
+            """
+        )
         self._send(200, "text/html; charset=utf-8", body)
 
 

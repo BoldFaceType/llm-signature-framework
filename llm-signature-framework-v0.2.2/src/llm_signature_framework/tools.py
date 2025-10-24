@@ -66,7 +66,13 @@ class ImageBlob(BaseModel):
 
 
 class Tool:
-    def __init__(self, name: Optional[str] = None, desc: Optional[str] = None, retries: int = 2, backoff: float = 0.4):
+    def __init__(
+        self,
+        name: Optional[str] = None,
+        desc: Optional[str] = None,
+        retries: int = 2,
+        backoff: float = 0.4,
+    ):
         self.name, self.desc, self.retries, self.backoff = name, desc, retries, backoff
 
     def __call__(self, func):
@@ -183,7 +189,9 @@ async def call_tool(name: str, arguments: Dict[str, Any]):
 
 @Tool(name="fetch_url", desc="Fetch a URL and return plain text (best-effort)")
 def fetch_url(url: str, timeout: float = 6.0, max_bytes: int = 2_000_000) -> str:
-    import urllib.request, urllib.error, html.parser
+    import html.parser
+    import urllib.error
+    import urllib.request
     from urllib.parse import urlparse
 
     allow = os.getenv("SAFE_FETCH_ALLOWLIST")

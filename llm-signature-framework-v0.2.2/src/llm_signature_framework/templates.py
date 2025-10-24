@@ -6,19 +6,17 @@ import hashlib
 import inspect
 import json
 import os
-import random
 import re
 import textwrap
-import time
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union, get_type_hints
+from typing import Any, Dict, List, Optional, get_type_hints
 
 from pydantic import BaseModel, TypeAdapter, ValidationError
 
 from .backends import get_backend
 from .state import StateManager
-from .tools import ImageBlob, InputValidationError, OutputValidationError, ExecutionError
+from .tools import ExecutionError, ImageBlob, InputValidationError, OutputValidationError
 
 __version__ = "0.2.2"
 
@@ -214,7 +212,8 @@ class LLMFunction:
                     "temperature": self.temperature,
                 }
                 try:
-                    if "seed" in inspect.signature(backend.run).parameters and self.seed is not None:
+                    sig_params = inspect.signature(backend.run).parameters
+                    if "seed" in sig_params and self.seed is not None:
                         _kwargs["seed"] = self.seed
                 except Exception:
                     pass
@@ -275,8 +274,13 @@ class LLMFunction:
                     if not self.enable_repair or attempt == self.retries:
                         raise OutputValidationError(ve) from ve
                     schema = getattr(Output, "json_schema", lambda: {})()
+                    schema_json = json.dumps(schema, indent=2)
                     repair_instruction = textwrap.dedent(
-                        f"Please return a response that validates against this JSON schema:\n{json.dumps(schema, indent=2)}\nOnly return the JSON object—no prose."
+                        (
+                            "Please return a response that validates against this JSON schema:\n"
+                            f"{schema_json}\n"
+                            "Only return the JSON object—no prose."
+                        )
                     ).strip()
                     if messages is None:
                         messages = [
@@ -339,10 +343,13 @@ def _make_external_prompt_function(
     _fn.__annotations__ = {**params, "return": ret}
     if source_path:
         _fn._prompt_source = source_path
-    from inspect import Signature, Parameter
 
-    parameters = [Parameter(k, kind=Parameter.KEYWORD_ONLY) for k in params.keys()]
-    _fn.__signature__ = Signature(parameters=parameters)  # type: ignore[attr-defined]
+    parameters = [
+        inspect.Parameter(k, kind=inspect.Parameter.KEYWORD_ONLY) for k in params.keys()
+    ]
+    _fn.__signature__ = inspect.Signature(  # type: ignore[attr-defined]
+        parameters=parameters
+    )
     return llm(template=tpl)(_fn)
 
 
