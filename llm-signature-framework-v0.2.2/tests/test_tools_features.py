@@ -1,7 +1,6 @@
 import asyncio
 import base64
-import urllib.error
-import urllib.request
+from urllib import error, request
 
 import pytest
 
@@ -114,15 +113,15 @@ def test_fetch_url_allowlist_and_parsing(monkeypatch):
     def fake_urlopen(req, timeout=6.0):
         return FakeResponse()
 
-    monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(request, "urlopen", fake_urlopen)
 
     text = asyncio.run(ToolRegistry.call("fetch_url", url="https://example.com", timeout=0.1, max_bytes=50))
     assert "hello" in text
 
     def raising_urlopen(req, timeout=6.0):
-        raise urllib.error.URLError("nope")
+        raise error.URLError("nope")
 
-    monkeypatch.setattr(urllib.request, "urlopen", raising_urlopen)
+    monkeypatch.setattr(request, "urlopen", raising_urlopen)
 
     with pytest.raises(ExecutionError):
         asyncio.run(ToolRegistry.call("fetch_url", url="https://example.com", timeout=0.1, max_bytes=50))
