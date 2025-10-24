@@ -1,5 +1,4 @@
-import os
-from llm_signature_framework.backends import get_backend, set_backend, MockBackend
+from llm_signature_framework.backends import MockBackend, get_backend, set_backend
 
 
 def test_get_backend_default_and_override(monkeypatch):

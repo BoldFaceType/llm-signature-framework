@@ -1,4 +1,5 @@
 import pytest
+
 from llm_signature_framework.templates import _MiniTemplate
 
 
