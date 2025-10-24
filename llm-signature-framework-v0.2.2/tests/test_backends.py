@@ -1,6 +1,7 @@
 import asyncio
 import json
 import os
+import urllib.request
 from types import SimpleNamespace
 
 import pytest
@@ -66,8 +67,6 @@ def test_hybrid_backend_posts_payload(monkeypatch):
         captured["headers"] = dict(req.header_items())
         captured["payload"] = req.data
         return FakeResponse(json.dumps({"content": "ok"}).encode())
-
-    import urllib.request
 
     monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
 

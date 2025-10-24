@@ -3,6 +3,7 @@ import sys
 import json
 import pytest
 
+import llm_signature_framework.backends as backends
 from llm_signature_framework import cli
 from llm_signature_framework.templates import __version__
 
@@ -58,8 +59,6 @@ def test_cli_run_missing_name(monkeypatch: pytest.MonkeyPatch, capsys: pytest.Ca
 
 
 def test_cli_backend_hybrid(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]):
-    import llm_signature_framework.backends as backends
-
     stub_backend = backends.MockBackend()
 
     monkeypatch.setenv("HYBRID_BACKEND_URL", "https://example.com")
